@@ -12,6 +12,7 @@ setup(
         "librosa==0.8",
         "numpy==1.20.0",
         "matplotlib==3.3.4",
+        "scikit-learn==0.24.1",
     ],
     extras_require={
         "dev": [
