@@ -81,13 +81,13 @@ def calc_tempo_stats(tempos: np.ndarray) -> Tuple[np.float32, np.float32, np.flo
     return (tempos_mean, tempos_std, tempos_max)
 
 
-def fourier_transformation(audio):
+def fourier_transformation(audio: np.ndarray) -> np.ndarray:
     spec = stft(audio, hop_length=2 ** 4, n_fft=2 ** 7)
     spec_db = amplitude_to_db(np.abs(spec))  # convert into decibels
     return spec_db
 
 
-def plot_fourier_transformation(sfreq, audio, spec_db):
+def plot_fourier_transformation(sfreq: int, audio: np.ndarray, spec_db: np.ndarray) -> None:
     # Compare the raw audio to the spectrogram of the audio
     time = np.arange(0, len(audio)) / sfreq
     fig, axs = plt.subplots(2, 1, figsize=(10, 10), sharex=True)
@@ -96,7 +96,7 @@ def plot_fourier_transformation(sfreq, audio, spec_db):
     plt.show()
 
 
-def calc_bandwidths_centroids(audio):
+def calc_bandwidths_centroids(audio: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     bandwidths = lr.feature.spectral_bandwidth(audio)[0]
     centroids = lr.feature.spectral_centroid(audio)[0]
     return (bandwidths, centroids)
