@@ -61,7 +61,7 @@ def calc_features_envelope(audio_envelope: np.ndarray) -> Tuple[np.float32, np.f
     return (envelope_mean, envelope_std, envelope_max)
 
 
-def calc_tempos(audio: np.ndarray) -> np.ndarray:
+def calc_tempos(audio: np.ndarray, sfreq: int) -> np.ndarray:
     tempos = []
     audio_df = pd.DataFrame(data=audio)
 
@@ -84,5 +84,5 @@ music = create_dataset()
 audio_envelope = calc_smooth_sound_envelope(audio)
 plot_auditory_envelope(audio_envelope)
 (envelope_mean, envelope_std, envelope_max) = calc_features_envelope(audio_envelope)
-tempos = calc_tempos(audio)
+tempos = calc_tempos(audio, sfreq)
 (tempos_mean, tempos_std, tempos_max) = calc_tempo_stats(tempos)
