@@ -6,7 +6,9 @@ import numpy as np
 import pandas as pd
 import librosa as lr
 import matplotlib.pyplot as plt
+from librosa.core import stft, amplitude_to_db
 from sklearn.utils import shuffle
+from librosa.display import specshow
 
 
 def create_dataset() -> pd.DataFrame:
@@ -79,6 +81,21 @@ def calc_tempo_stats(tempos: np.ndarray) -> Tuple[np.float32, np.float32, np.flo
     return (tempos_mean, tempos_std, tempos_max)
 
 
+def fourier_transformation(audio):
+    spec = stft(audio, hop_length=2 ** 4, n_fft=2 ** 7)
+    spec_db = amplitude_to_db(np.abs(spec))  # convert into decibels
+    return spec_db
+
+
+def plot_fourier_transformation(sfreq, audio, spec_db):
+    # Compare the raw audio to the spectrogram of the audio
+    time = np.arange(0, len(audio)) / sfreq
+    fig, axs = plt.subplots(2, 1, figsize=(10, 10), sharex=True)
+    axs[0].plot(time, audio)
+    specshow(spec_db, sr=sfreq, x_axis='time', y_axis='hz', hop_length=2 ** 4)
+    plt.show()
+
+
 music = create_dataset()
 (audio, sfreq, D, mfccs) = calculate_features(music)
 audio_envelope = calc_smooth_sound_envelope(audio)
@@ -86,3 +103,5 @@ plot_auditory_envelope(audio_envelope)
 (envelope_mean, envelope_std, envelope_max) = calc_features_envelope(audio_envelope)
 tempos = calc_tempos(audio, sfreq)
 (tempos_mean, tempos_std, tempos_max) = calc_tempo_stats(tempos)
+spec_db = fourier_transformation(audio)
+plot_fourier_transformation(sfreq, audio, spec_db)
