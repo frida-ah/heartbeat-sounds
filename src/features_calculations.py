@@ -96,6 +96,12 @@ def plot_fourier_transformation(sfreq, audio, spec_db):
     plt.show()
 
 
+def calc_bandwidths_centroids(audio):
+    bandwidths = lr.feature.spectral_bandwidth(audio)[0]
+    centroids = lr.feature.spectral_centroid(audio)[0]
+    return (bandwidths, centroids)
+
+
 music = create_dataset()
 (audio, sfreq, D, mfccs) = calculate_features(music)
 audio_envelope = calc_smooth_sound_envelope(audio)
@@ -103,5 +109,7 @@ plot_auditory_envelope(audio_envelope)
 (envelope_mean, envelope_std, envelope_max) = calc_features_envelope(audio_envelope)
 tempos = calc_tempos(audio, sfreq)
 (tempos_mean, tempos_std, tempos_max) = calc_tempo_stats(tempos)
+spec = stft(audio, hop_length=2 ** 4, n_fft=2 ** 7)
 spec_db = fourier_transformation(audio)
 plot_fourier_transformation(sfreq, audio, spec_db)
+(bandwidths, centroids) = calc_bandwidths_centroids(audio)
